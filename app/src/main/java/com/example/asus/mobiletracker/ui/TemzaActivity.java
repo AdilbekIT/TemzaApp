@@ -2,8 +2,12 @@ package com.example.asus.mobiletracker.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -25,6 +29,7 @@ import com.example.asus.mobiletracker.entities.ApiValidation;
 import com.example.asus.mobiletracker.entities.TokenManager;
 import com.example.asus.mobiletracker.network.ApiService;
 import com.example.asus.mobiletracker.network.RetrofitBuilder;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.prefs.PreferencesFactory;
 
@@ -35,7 +40,7 @@ import retrofit2.Response;
 import static com.example.asus.mobiletracker.utils.Utils.convertErrors;
 
 public class TemzaActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "TemzaActivity";
 
@@ -43,6 +48,12 @@ public class TemzaActivity extends AppCompatActivity
     TokenManager tokenManager;
     AwesomeValidation validation;
     Call<AccessToken> call;
+
+
+    private ShimmerFrameLayout mShimmerViewContainer;
+    private RecyclerView recyclerView;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
@@ -78,6 +89,10 @@ public class TemzaActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        //init shimmer animation
+//        mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
+
+
         //Retrofit with laravel passport api tokens and check if it exists
         tokenManager = TokenManager.getInstance(getSharedPreferences("preferences",MODE_PRIVATE));
 
@@ -94,7 +109,92 @@ public class TemzaActivity extends AppCompatActivity
             finish();
         }
 
+        // recycler view to do list
+        recyclerView = findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(llm);
+
+
+
+        //swipe refresh action
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
+
+        //getting list of products from a server
+        getProductList();
+
+
     }
+
+
+
+    @Override
+    public void onRefresh() {
+
+        Toast.makeText(this, "Обновление...", Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                getProductList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1300);
+    }
+
+    public void getProductList(){
+
+
+        //TODO: write code to receive data from sever callback method by Adilbek
+//
+//        call = apiService.freeServices();
+//        call.enqueue(new Callback<FreeServicesResponse>() {
+//
+//            @Override
+//            public void onResponse(Call<FreeServicesResponse> call, Response<FreeServicesResponse> response) {
+//
+//                Log.w(TAG,"onResponse: " + response);
+//                Log.d(TAG,"onTokenManager: -------------" + tokenManager.getToken().toString());
+//
+//                if (response.isSuccessful())
+//                {
+//                    lister = response.body().getData();
+//
+//                    mAdapter = new PostListAdapter(lister, CertainActivity.this, new PostListAdapter.OnNoteListener() {
+//                        @Override
+//                        public void onNoteClick(int position) {
+//                            int postId = lister.get(position).getId();
+//
+//
+//                            Intent intent = new Intent(CertainActivity.this,SingleActivity.class);
+//                            intent.putExtra("id_organization",postId);
+//
+//                            startActivity(intent);
+//                        }
+//                    });
+//
+//                    mAdapter.notifyDataSetChanged();
+//                    mShimmerViewContainer.stopShimmer();
+//                    mShimmerViewContainer.setVisibility(View.GONE);
+//
+//                    recyclerView.setVisibility(View.VISIBLE);
+//                    recyclerView.setAdapter(mAdapter);
+//
+//
+//                    Toast.makeText(getApplicationContext(),"Все успешно загружено",Toast.LENGTH_SHORT).show();
+//
+//                }else {
+//                    Toast.makeText(getApplicationContext(),"Не могу загрузить данные" + tokenManager.getToken(),Toast.LENGTH_LONG).show();
+//                    tokenManager.deleteToken();
+//                    startActivity(new Intent(CertainActivity.this, LoginActivity.class));
+//                    finish();
+//                }
+
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -153,6 +253,8 @@ public class TemzaActivity extends AppCompatActivity
         return true;
     }
 
+
+    //logout by Adilbek
     public void logout(){
 
             call = apiService.logout(tokenManager.getToken().getAccessToken());
@@ -176,9 +278,11 @@ public class TemzaActivity extends AppCompatActivity
             });
         }
 
-        void info(){
-            Intent intent = new Intent(this,ScrollingActivity.class);
-            startActivity(intent);
-        }
+
+        //by Yerassyl
+    void info(){
+        Intent intent = new Intent(this,ScrollingActivity.class);
+        startActivity(intent);
+    }
 
 }

@@ -1,11 +1,13 @@
 package com.example.asus.mobiletracker.network;
 
 import com.example.asus.mobiletracker.entities.AccessToken;
+import com.example.asus.mobiletracker.models.ListSingleProduct;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -28,8 +30,10 @@ public interface ApiService {
     @FormUrlEncoded
     Call<AccessToken> refresh (@Field("refresh_token") String refreshToken);
 
-//    @GET("organizations")
-//    Call<FreeServicesResponse> freeServices();
+    @GET("products")
+    Call<ListSingleProduct> listOfProducts();
+
+
 //
 //    @GET("organizations/{id}")
 //    Call<SingleOrganization> getServices(@Path("id") int id);
