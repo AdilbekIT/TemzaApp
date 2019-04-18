@@ -49,7 +49,6 @@ public class TemzaActivity extends AppCompatActivity
     AwesomeValidation validation;
     Call<AccessToken> call;
 
-
     private ShimmerFrameLayout mShimmerViewContainer;
     private RecyclerView recyclerView;
 
@@ -110,22 +109,20 @@ public class TemzaActivity extends AppCompatActivity
         }
 
         // recycler view to do list
-        recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(llm);
+//        recyclerView = findViewById(R.id.recycler_view);
+//        recyclerView.setHasFixedSize(true);
+//        LinearLayoutManager llm = new LinearLayoutManager(this);
+//        llm.setOrientation(LinearLayoutManager.VERTICAL);
+//        recyclerView.setLayoutManager(llm);
+//
 
 
-
-        //swipe refresh action
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        swipeRefreshLayout.setOnRefreshListener(this);
-
+//        //swipe refresh action
+//        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+//        swipeRefreshLayout.setOnRefreshListener(this);
 
         //getting list of products from a server
         getProductList();
-
 
     }
 
