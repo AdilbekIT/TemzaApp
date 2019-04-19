@@ -8,6 +8,7 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+
     <include
         layout="@layout/app_bar_temza"
         android:layout_width="match_parent"
@@ -20,6 +21,12 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_temza"
-        app:menu="@menu/activity_temza_drawer" />
+        app:menu="@menu/activity_temza_drawer" >
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="22dp"
+            android:layout_height="30dp" />
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

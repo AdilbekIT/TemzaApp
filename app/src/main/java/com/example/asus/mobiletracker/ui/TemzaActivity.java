@@ -1,14 +1,19 @@
 package com.example.asus.mobiletracker.ui;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,29 +23,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
+import com.bumptech.glide.Glide;
 import com.example.asus.mobiletracker.R;
 import com.example.asus.mobiletracker.auth.LoginActivity;
 import com.example.asus.mobiletracker.entities.AccessToken;
 import com.example.asus.mobiletracker.entities.ApiValidation;
 import com.example.asus.mobiletracker.entities.TokenManager;
+import com.example.asus.mobiletracker.fragments.HistoryFragment;
+import com.example.asus.mobiletracker.fragments.MySampleFabFragment;
+import com.example.asus.mobiletracker.fragments.OrdersFragment;
+import com.example.asus.mobiletracker.fragments.SettingsFragment;
 import com.example.asus.mobiletracker.network.ApiService;
 import com.example.asus.mobiletracker.network.RetrofitBuilder;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
-import java.util.prefs.PreferencesFactory;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-import static com.example.asus.mobiletracker.utils.Utils.convertErrors;
 
-public class TemzaActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,SwipeRefreshLayout.OnRefreshListener {
+public class TemzaActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "TemzaActivity";
 
@@ -49,9 +56,11 @@ public class TemzaActivity extends AppCompatActivity
     AwesomeValidation validation;
     Call<AccessToken> call;
 
+    TextView orders;
+    FloatingActionButton fab;
+    HistoryFragment swiftFragment;
     private ShimmerFrameLayout mShimmerViewContainer;
     private RecyclerView recyclerView;
-
     private SwipeRefreshLayout swipeRefreshLayout;
 
 
@@ -68,12 +77,14 @@ public class TemzaActivity extends AppCompatActivity
 
 
         //floating button to filter data
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+         fab = (FloatingActionButton) findViewById(R.id.fab);
+
+         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+                MySampleFabFragment dialogFrag = MySampleFabFragment.newInstance();
+                dialogFrag.setParentFab(fab);
+                dialogFrag.show(getSupportFragmentManager(), dialogFrag.getTag());
             }
         });
 
@@ -114,15 +125,32 @@ public class TemzaActivity extends AppCompatActivity
 //        LinearLayoutManager llm = new LinearLayoutManager(this);
 //        llm.setOrientation(LinearLayoutManager.VERTICAL);
 //        recyclerView.setLayoutManager(llm);
+
+
 //
-
-
 //        //swipe refresh action
 //        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
 //        swipeRefreshLayout.setOnRefreshListener(this);
 
-        //getting list of products from a server
+       // getting list of products from a server
+
+
         getProductList();
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HistoryFragment()).commit();
+            navigationView.setCheckedItem(R.id.fragment_container);
+        }
+
+        orders =(TextView) MenuItemCompat.getActionView(navigationView.getMenu().
+                findItem(R.id.nav_orders));
+
+
+        //Gravity property aligns the text
+        orders.setGravity(Gravity.CENTER_VERTICAL);
+        orders.setTypeface(null, Typeface.BOLD);
+        orders.setTextColor(getResources().getColor(R.color.colorAccent));
+        orders.setText("99+");
 
     }
 
@@ -145,7 +173,7 @@ public class TemzaActivity extends AppCompatActivity
     public void getProductList(){
 
 
-        //TODO: write code to receive data from sever callback method by Adilbek
+        //TODO: write code to receive data from server callback method by Adilbek
 //
 //        call = apiService.freeServices();
 //        call.enqueue(new Callback<FreeServicesResponse>() {
@@ -225,17 +253,32 @@ public class TemzaActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+
         if (id == R.id.nav_orders) {
-            // Handle the camera action
+            Log.i("Main orders", "FRAGMENT");
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new OrdersFragment()).commit();
+
+
+
         } else if (id == R.id.nav_history) {
 
+            Log.i("History", "FRAGMENT");
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new HistoryFragment()).commit();
+
         } else if (id == R.id.nav_settings) {
+
+            Log.i("Settings", "FRAGMENT");
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
+
+            Intent intent = new Intent(this,SettingsActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_info) {
             info();
@@ -254,26 +297,19 @@ public class TemzaActivity extends AppCompatActivity
     //logout by Adilbek
     public void logout(){
 
-            call = apiService.logout(tokenManager.getToken().getAccessToken());
-            call.enqueue(new Callback<AccessToken>() {
-                @Override
-                public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+        //Retrofit with laravel passport api tokens and check if it exists
+        tokenManager = TokenManager.getInstance(getSharedPreferences("preferences",MODE_PRIVATE));
+        tokenManager.deleteToken();
 
-                    Log.w(TAG, "onResponse: " + response.body());
+        Log.d(TAG,"ACCESS_TOKEN" + tokenManager.getToken().getAccessToken());
 
-                    if (response.isSuccessful()) {
-                        tokenManager.saveToken(response.body());
-                        startActivity(new Intent(TemzaActivity.this,LoginActivity.class));
-                        finish();
-                    }
-                }
-                @Override
-                public void onFailure(Call<AccessToken> call, Throwable t) {
-                    Log.w(TAG, "onFailure: " + t.getMessage());
-
-                }
-            });
+        if (tokenManager.getToken().getAccessToken() == null){
+            Intent intent = new Intent(this,LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
+
+     }
 
 
         //by Yerassyl

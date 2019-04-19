@@ -39,7 +39,7 @@
         android:id="@+id/form_container"
         android:layout_width="match_parent"
         android:layout_height="407dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical">
 
         <TextView
@@ -47,8 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/login"
-          />
+            android:text="@string/login" />
 
 
         <android.support.design.widget.TextInputLayout
@@ -97,8 +96,8 @@
             android:layout_width="224dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/btn_login"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            android:text="@string/btn_login" />
 
         <TextView
             android:id="@+id/go_to_register"
