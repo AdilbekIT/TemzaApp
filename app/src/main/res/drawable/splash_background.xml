@@ -4,16 +4,16 @@
     <item>
         <shape>
             <gradient
-                android:startColor="#d1a884"
-                android:endColor="#d9a4d3"
+                android:startColor="#fdfdfe"
+                android:endColor="#fdfdfe"
                 android:angle="-135" />
         </shape>
     </item>
-    <!--<item android:height="160dp"-->
-        <!--android:width="160dp"-->
-        <!--android:gravity="center|top"-->
-        <!--android:top="200dp">-->
-        <!--<bitmap-->
-            <!--android:src="@drawable/time_white"/>-->
-    <!--</item>-->
+    <item android:height="160dp"
+        android:width="160dp"
+        android:gravity="center|top"
+        android:top="200dp">
+        <bitmap
+            android:src="@drawable/temza"/>
+    </item>
 </layer-list>

@@ -37,6 +37,7 @@ import com.example.asus.mobiletracker.entities.ApiValidation;
 import com.example.asus.mobiletracker.entities.TokenManager;
 import com.example.asus.mobiletracker.fragments.HistoryFragment;
 import com.example.asus.mobiletracker.fragments.MySampleFabFragment;
+import com.example.asus.mobiletracker.fragments.NewsFragment;
 import com.example.asus.mobiletracker.fragments.OrdersFragment;
 import com.example.asus.mobiletracker.fragments.SettingsFragment;
 import com.example.asus.mobiletracker.network.ApiService;
@@ -149,7 +150,7 @@ public class TemzaActivity extends AppCompatActivity implements NavigationView.O
         //Gravity property aligns the text
         orders.setGravity(Gravity.CENTER_VERTICAL);
         orders.setTypeface(null, Typeface.BOLD);
-        orders.setTextColor(getResources().getColor(R.color.colorAccent));
+        orders.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
         orders.setText("99+");
 
     }
@@ -281,11 +282,16 @@ public class TemzaActivity extends AppCompatActivity implements NavigationView.O
             startActivity(intent);
 
         } else if (id == R.id.nav_info) {
-            info();
+            info();}
+
+            else if (id == R.id.nav_news){
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new NewsFragment()).commit();
 
 
         } else if (id == R.id.nav_exit) {
             logout();
+        } else if (id == R.id.nav_account){
+            profile();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -293,6 +299,15 @@ public class TemzaActivity extends AppCompatActivity implements NavigationView.O
         return true;
     }
 
+
+    public void onResult(Object result) {
+        Log.d("k9res", "onResult: " + result.toString());
+        if (result.toString().equalsIgnoreCase("swiped_down")) {
+            //do something or nothing
+        } else {
+            //handle result
+        }
+    }
 
     //logout by Adilbek
     public void logout(){
@@ -315,6 +330,11 @@ public class TemzaActivity extends AppCompatActivity implements NavigationView.O
         //by Yerassyl
     void info(){
         Intent intent = new Intent(this,ScrollingActivity.class);
+        startActivity(intent);
+    }
+
+    void profile(){
+        Intent intent = new Intent(this,ProfileActivity.class);
         startActivity(intent);
     }
 
